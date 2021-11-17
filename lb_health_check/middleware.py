@@ -1,7 +1,7 @@
 """Middleware for the LB health check"""
 
 import logging
-from typing import Set
+from typing import Set, Any
 
 from django.conf import settings
 from django.http import HttpResponse
@@ -11,21 +11,18 @@ log = logging.getLogger(__name__)
 class AliveCheck:
     def __init__(self, get_response):
         self.get_response = get_response
-        self.urls: Set[str] = set()
 
         try:
-            aliveness_setting = settings.ALIVENESS_URL
-            if isinstance(aliveness_setting, str):
-                self.urls.add(aliveness_setting)
-            elif isinstance(aliveness_setting, (list, set)):
-                # Coerce everything into a string for safety
-                for item in aliveness_setting:
-                    self.urls.add(str(item))
-            else:
-                log.warn("ALIVENESS_URL must be a str, list, or set")
-                
+            self.urls = _get_urls()
         except AttributeError:
-            log.warn("ALIVENESS_URL was not set, aliveness check disabled")
+            self.urls = set()
+        
+        if not self.urls:
+            log.error("No aliveness URLs are defined, check disabled")
+
+        for url in self.urls:
+            log.info("Intercepting GET requests to %s for aliveness check", url)
+            
 
     def __call__(self, request):
         # Intercept health check URL calls so
@@ -35,3 +32,31 @@ class AliveCheck:
 
         # Process the request as normal if it isn't a health check
         return self.get_response(request)
+
+def _get_urls() -> Set[str]:
+    try:
+        val = settings.ALIVENESS_URL
+    except AttributeError:
+        log.warning("ALIVENESS_URL was not set")
+        return set()
+
+    if val is None:
+        return set()
+
+    if isinstance(val, str):
+        return {val}
+    
+    if isinstance(val, (list, set)):
+        out: Set[str] = set()
+
+        for item in val:
+            if not isinstance(item, str):
+                log.warning("Item in ALIVENESS_URL was not a string: %s", item)
+                continue
+                
+            out.add(item)
+        
+        return out
+    
+    log.warning("aliveness URL must be a str, list, or set. Got %s", val)
+    return set()

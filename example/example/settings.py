@@ -27,6 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# The ALIVENESS_URL will bypass the entire Django URL system
+# and serve the health check URL. This could also be a set or a list.
+ALIVENESS_URL = "/health-check/"
 
 # Application definition
 
@@ -37,10 +40,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # The lb_health_check doesn't need to be in installed_apps,
+    # but doing so allows its unit tests to be run
+    'lb_health_check',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # AliveCheck needs to be as high as possible and
+    # absolutely before CommonMiddleware.
+    'lb_health_check.middleware.AliveCheck',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
