@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "django-lb-health-check"
+version = "0.1.0"
+description = "Middleware based health check for Django"
+authors = ["Adam Peacock <adam@thepeacock.net>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = ">=3.5"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
