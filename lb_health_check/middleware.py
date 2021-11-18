@@ -9,6 +9,9 @@ from django.http import HttpResponse
 log = logging.getLogger(__name__)
 
 class AliveCheck:
+    """A simple "am I responding to HTTP requests" check
+    that is designed to be hit from a load balancer"""
+    
     def __init__(self, get_response):
         self.get_response = get_response
 
