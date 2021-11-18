@@ -27,7 +27,7 @@ MIDDLEWARE = [
 ]
 ```
 
-Set the URL you want to use for your aliveness check. Note that a GET request to this URL **will** shadow any other URL you have defined through the Django URL mapper. Aliveness URL can be a string for a single health check URL or a list of strings if you want the aliveness check to run from multiple URLs. The multiple URL strategy is helpful if you are changing the URL of the endpoint by allowing both the old and new URLs to be checked.
+Set the URL you want to use for your aliveness check. Note that a GET request to this URL **will** shadow any other route you have defined through the Django URL mapper. Aliveness URL can be a string for a single health check URL or a list of strings if you want the aliveness check to run from multiple URLs. The multiple URL strategy is helpful if you are changing the URL of the endpoint by allowing both the old and new URLs to be checked.
 
 ```python
 ALIVENESS_URL = "/health-check/"
