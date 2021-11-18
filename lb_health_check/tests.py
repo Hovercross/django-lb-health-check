@@ -41,3 +41,19 @@ class AlivenessURLTestCase(TestCase):
     def test_other_url(self):
         response = self.client.get("/i-like-pie/")
         self.assertEqual(response.status_code, 404)
+    
+    @override_settings(ALIVENESS_URL=15)
+    def test_non_string(self):
+        with self.assertLogs(logger='lb_health_check.middleware', level='INFO') as cm:
+            response = self.client.get("/health-check/")
+            self.assertEqual(response.status_code, 404)
+        
+        self.assertIn("WARNING:lb_health_check.middleware:ALIVENESS_URL must be a str, list, or set. Got 15", cm.output)
+
+    @override_settings(ALIVENESS_URL={15})
+    def test_non_string_in_set(self):
+        with self.assertLogs(logger='lb_health_check.middleware', level='INFO') as cm:
+            response = self.client.get("/health-check/")
+            self.assertEqual(response.status_code, 404)
+        
+        self.assertIn("WARNING:lb_health_check.middleware:Item in ALIVENESS_URL was not a string: 15", cm.output)
