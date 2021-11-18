@@ -6,6 +6,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      POETRY_VIRTUALENVS_CREATE: false
     strategy:
       matrix:
         python-version:
@@ -25,6 +27,14 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - run: python -m pip install --upgrade pip setuptools codecov
+      - name: Install poetry ${{ matrix.poetry-version }}
+        run: |
+          python -m ensurepip
+          python -m pip install --upgrade pip
+          python -m pip install poetry
+      
+      - name: Set up dependencies
+        run: python -m poetry install
       - run: pip install Django=="${{ matrix.django-version }}"
       - run: python example/manage.py test
+
