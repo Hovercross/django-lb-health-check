@@ -7,7 +7,22 @@ license = "MIT"
 packages = [
     { include = "lb_health_check" },
 ]
-
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+]
+include = [
+    "LICENSE"
+]
+readme = "Readme.md"
+homepage = "https://github.com/Hovercross/django-lb-health-check"
+repository = "https://github.com/Hovercross/django-lb-health-check"
+keywords = ["django", "health", "alive", "check"]
 [tool.poetry.dependencies]
 python = ">=3.6"
 Django = ">=2.2"
