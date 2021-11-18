@@ -12,10 +12,7 @@ class AliveCheck:
     def __init__(self, get_response):
         self.get_response = get_response
 
-        try:
-            self.urls = _get_urls()
-        except AttributeError:
-            self.urls = set()
+        self.urls = _get_urls()
         
         if not self.urls:
             log.error("No aliveness URLs are defined, check disabled")
