@@ -14,6 +14,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # the Github leak detector doesn't yell at me
 SECRET_KEY = ''.join(choice(ascii_letters) for _ in range(64))
 
+DEBUG=True
+
 # The ALIVENESS_URL will bypass the entire Django URL system
 # and serve the health check URL. This could also be a set or a list.
 ALIVENESS_URL = "/health-check/"
@@ -33,9 +35,11 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    # AliveCheck needs to be as high as possible and
-    # absolutely before CommonMiddleware.
+
+    # AliveCheck needs to be as high as possible below SecurityMiddlware
+    # and absolutely above CommonMiddleware.
     'lb_health_check.middleware.AliveCheck',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -70,3 +74,5 @@ DATABASES = {
         'NAME': ":memory:",
     }
 }
+
+STATIC_URL = '/static/'
