@@ -55,5 +55,5 @@ def _get_urls() -> Set[str]:
         
         return out
     
-    log.warning("aliveness URL must be a str, list, or set. Got %s", val)
+    log.warning("ALIVENESS_URL must be a str, list, or set. Got %s", val)
     return set()
