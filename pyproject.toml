@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-lb-health-check"
-version = "0.1.0"
+version = "0.1.1"
 description = "Middleware based health check for Django"
 authors = ["Adam Peacock <adam@thepeacock.net>"]
 license = "MIT"
