@@ -1,4 +1,4 @@
-name: Lint
+name: Release to PyPi
 on: release
 
 jobs:
