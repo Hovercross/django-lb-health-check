@@ -1,10 +1,17 @@
 # Django Load Balancer Health Check
 
-Aliveness check for Django that bypasses ALLOWED_HOSTS
+Aliveness check for Django that bypasses ALLOWED_HOSTS for the purposes of load balancers
 
 ## Purpose
 
-When running on app platforms (Heroku/DigitalOcean/etc), Kubernetes, Elastic Load Balancer, and other similar platforms it is often the case that the host header is not set appropriately for health checks. When these platforms perform an HTTP health check without the proper host header an *error 400 bad request* will be returned by Django. This is because the Django Common Middleware tests the host header and raises a DisalowedHost exception if it doesn't match what is in ALLOWED_HOSTS. This package provides an alternative health/aliveness check that is returned by middlware and thus bypasses the ALLOWED_HOSTS check. In order to accomplish this, django-lb-health-check middleware checks if the incoming URL is for the known health check URL and returns a response - bypassing the majority of the Django platform. It is not designed as a replacement for something like [django-health-check](https://github.com/KristianOellegaard/django-health-check), but instead as a better alternative to a TCP based aliveness check that ensures your Django project has been started and is responding to HTTP instead of just having a port open.
+When running on some app platforms and behind some load balancers, it is often the case that the host header is not set appropriately for health checks. When these platforms perform an HTTP health check without the proper host header an *error 400 bad request* will be returned by Django. This package provides a method to allow for for a simple "aliveness" health check that bypasses the `ALLOWED_HOSTS` protections. `ALLOWED_HOSTS` protection is bypassed only for the status aliveness check URL and not for any other requests.
+
+This package is not an alternative to something like [django-health-check](https://github.com/KristianOellegaard/django-health-check), but is instead a better alternative than the TCP health check that is the default on many load balancers. The TCP health checks can only see if your uWSGI/Gunicorn/Uvicorn/etc server is alive, while this package ensures that requests are being properly routed to Django.
+
+## How it works
+
+This package works by returning an HTTP response from a middleware class before Django's common middleware performs the host check. The Django URL routing system is also bypassed since that happens "below" all middleware. During request processing, *django-lb-health-check* checks if the request is a *GET* request and matches `settings.ALIVENESS_URL`. If it is, a static plain text "200 OK" response is returned bypassing any other processing.
+
 
 ## Usage
 
