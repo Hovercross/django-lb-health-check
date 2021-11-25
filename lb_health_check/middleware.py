@@ -28,7 +28,7 @@ class AliveCheck:
         # Intercept health check URL calls so
         # they bypass the allowed hosts check
         if request.method == "GET" and request.path in self.urls:
-            return HttpResponse("OK\n", content_type="text/plain")
+            return HttpResponse("200 OK\n", content_type="text/plain")
 
         # Process the request as normal if it isn't a health check
         return self.get_response(request)
