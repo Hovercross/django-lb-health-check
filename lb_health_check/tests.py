@@ -1,8 +1,9 @@
 from django.test import TestCase, override_settings
 from django.conf import settings
 
-class AlivenessURLTestCase(TestCase):
+from .middleware import AliveCheck
 
+class AlivenessURLTestCase(TestCase):
     @override_settings(ALIVENESS_URL="/health-check/")
     def test_str(self):
         response = self.client.get("/health-check/")
@@ -59,3 +60,6 @@ class AlivenessURLTestCase(TestCase):
             self.assertEqual(response.status_code, 404)
         
         self.assertIn("WARNING:lb_health_check.middleware:Item in ALIVENESS_URL was not a string: 15", cm.output)
+    
+    def test_import_name(self):
+        self.assertEqual(AliveCheck.import_name, 'lb_health_check.middleware.AliveCheck')

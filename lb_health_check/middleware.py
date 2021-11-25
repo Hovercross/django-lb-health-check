@@ -33,6 +33,11 @@ class AliveCheck:
         # Process the request as normal if it isn't a health check
         return self.get_response(request)
 
+    @classmethod
+    @property
+    def import_name(cls) -> str:
+        return f"{cls.__module__}.{cls.__name__}"
+
 def _get_urls() -> Set[str]:
     try:
         val = settings.ALIVENESS_URL
