@@ -29,6 +29,7 @@ Django = ">=2.2"
 
 [tool.poetry.dev-dependencies]
 coverage = "^6.1.2"
+black = "^21.11b1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
