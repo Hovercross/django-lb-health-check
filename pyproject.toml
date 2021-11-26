@@ -24,7 +24,7 @@ homepage = "https://github.com/Hovercross/django-lb-health-check"
 repository = "https://github.com/Hovercross/django-lb-health-check"
 keywords = ["django", "health", "alive", "check"]
 [tool.poetry.dependencies]
-python = ">=3.6"
+python = ">=3.6.2"
 Django = ">=2.2"
 
 [tool.poetry.dev-dependencies]
