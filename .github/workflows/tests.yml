@@ -38,3 +38,24 @@ jobs:
         run: pip install Django=="${{ matrix.django-version }}"
       - name: Run tests
         run: python example/manage.py test
+  
+  lint:
+    runs-on: ubuntu-latest
+    env:
+      POETRY_VIRTUALENVS_CREATE: false
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+      - name: Install poetry
+        run: |
+          python -m ensurepip
+          python -m pip install --upgrade pip
+          python -m pip install poetry
+      
+      - name: Set up dependencies
+        run: python -m poetry install
+      - name: Run black
+        run: black --check --diff lb_health_check/
