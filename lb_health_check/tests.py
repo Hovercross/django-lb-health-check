@@ -1,6 +1,8 @@
 from django.test import TestCase, override_settings
 from django.conf import settings
 
+from .middleware import AliveCheck, COMMON_MIDDLWARE
+
 
 class AlivenessURLTestCase(TestCase):
     @override_settings(ALIVENESS_URL="/health-check/")
@@ -71,5 +73,43 @@ class AlivenessURLTestCase(TestCase):
 
         self.assertIn(
             "WARNING:lb_health_check.middleware:Item in ALIVENESS_URL was not a string: 15",
+            cm.output,
+        )
+
+    def test_import_name(self):
+        self.assertEqual(
+            AliveCheck.get_import_name(), "lb_health_check.middleware.AliveCheck"
+        )
+
+    @override_settings(MIDDLEWARE=[])
+    def test_missing_aliveness_middleware(self):
+        with self.assertLogs(logger="lb_health_check.middleware", level="DEBUG") as cm:
+            # We have to construct the alivenss check manually to trigger this
+            AliveCheck(get_response=None)
+
+        self.assertIn(
+            "WARNING:lb_health_check.middleware:AliveCheck not found in middleware",
+            cm.output,
+        )
+
+    @override_settings(MIDDLEWARE=[COMMON_MIDDLWARE])
+    def test_missing_aliveness_middleware_with_common(self):
+        with self.assertLogs(logger="lb_health_check.middleware", level="DEBUG") as cm:
+            # We have to construct the alivenss check manually to trigger this
+            AliveCheck(get_response=None)
+
+        self.assertIn(
+            "WARNING:lb_health_check.middleware:AliveCheck not found in middleware",
+            cm.output,
+        )
+
+    @override_settings(MIDDLEWARE=[COMMON_MIDDLWARE, AliveCheck.get_import_name()])
+    def test_wrong_order(self):
+        with self.assertLogs(logger="lb_health_check.middleware", level="DEBUG") as cm:
+            # This will trigger middleware instantiation and such
+            self.client.get("/health-check/")
+
+        self.assertIn(
+            "WARNING:lb_health_check.middleware:django.middleware.common.CommonMiddleware is before lb_health_check.middleware.AliveCheck in middlware. Aliveness check may not work properly",
             cm.output,
         )
