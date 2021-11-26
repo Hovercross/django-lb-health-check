@@ -8,15 +8,16 @@ from django.http import HttpResponse
 
 log = logging.getLogger(__name__)
 
-COMMON_MIDDLWARE = 'django.middleware.common.CommonMiddleware'
+COMMON_MIDDLWARE = "django.middleware.common.CommonMiddleware"
 
 # Middleware that the AliveCheck must come before
 MUST_ABOVE = [COMMON_MIDDLWARE]
 
+
 class AliveCheck:
     """A simple "am I responding to HTTP requests" check
     that is designed to be hit from a load balancer"""
-    
+
     def __init__(self, get_response):
         self.get_response = get_response
 
@@ -31,7 +32,6 @@ class AliveCheck:
 
         for url in self.urls:
             log.info("Intercepting GET requests to %s for aliveness check", url)
-            
 
     def __call__(self, request):
         # Intercept health check URL calls so
@@ -47,6 +47,7 @@ class AliveCheck:
     def import_name(cls) -> str:
         return f"{cls.__module__}.{cls.__name__}"
 
+
 def _get_urls() -> Set[str]:
     try:
         val = settings.ALIVENESS_URL
@@ -59,7 +60,7 @@ def _get_urls() -> Set[str]:
 
     if isinstance(val, str):
         return {val}
-    
+
     if isinstance(val, (list, set)):
         out: Set[str] = set()
 
@@ -67,11 +68,11 @@ def _get_urls() -> Set[str]:
             if not isinstance(item, str):
                 log.warning("Item in ALIVENESS_URL was not a string: %s", item)
                 continue
-                
+
             out.add(item)
-        
+
         return out
-    
+
     log.warning("ALIVENESS_URL must be a str, list, or set. Got %s", val)
     return set()
 
@@ -83,11 +84,12 @@ def _get_middleware() -> List[str]:
         log.debug("middleware not defined in settings")
         return []
 
+
 def _check_middleware_position():
     """Warn if the middleware is in the wrong position"""
 
     middleware = _get_middleware()
-    
+
     try:
         my_position = middleware.index(AliveCheck.import_name)
     except ValueError:
@@ -95,7 +97,7 @@ def _check_middleware_position():
         # though it's highly unlikely that this will be called if that is the case
         log.warning("AliveCheck not found in middleware")
         return
-    
+
     for name in MUST_ABOVE:
         try:
             pos = middleware.index(name)
@@ -103,8 +105,11 @@ def _check_middleware_position():
             # If this middleware isn't in the list, it's OK
             log.debug("Common middleware not in middleware")
             continue
-    
+
         if pos < my_position:
-            log.warning("%s is before %s in middlware. "
-                        "Aliveness check may not work properly",
-                        name, AliveCheck.import_name)
+            log.warning(
+                "%s is before %s in middlware. "
+                "Aliveness check may not work properly",
+                name,
+                AliveCheck.import_name,
+            )
