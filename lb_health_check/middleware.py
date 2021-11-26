@@ -43,8 +43,7 @@ class AliveCheck:
         return self.get_response(request)
 
     @classmethod
-    @property
-    def import_name(cls) -> str:
+    def get_import_name(cls) -> str:
         return f"{cls.__module__}.{cls.__name__}"
 
 
@@ -91,7 +90,7 @@ def _check_middleware_position():
     middleware = _get_middleware()
 
     try:
-        my_position = middleware.index(AliveCheck.import_name)
+        my_position = middleware.index(AliveCheck.get_import_name())
     except ValueError:
         # We can't do anything intelligent if we aren't in the middleware,
         # though it's highly unlikely that this will be called if that is the case
@@ -111,5 +110,5 @@ def _check_middleware_position():
                 "%s is before %s in middlware. "
                 "Aliveness check may not work properly",
                 name,
-                AliveCheck.import_name,
+                AliveCheck.get_import_name(),
             )

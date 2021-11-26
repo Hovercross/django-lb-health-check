@@ -78,7 +78,7 @@ class AlivenessURLTestCase(TestCase):
 
     def test_import_name(self):
         self.assertEqual(
-            AliveCheck.import_name, "lb_health_check.middleware.AliveCheck"
+            AliveCheck.get_import_name(), "lb_health_check.middleware.AliveCheck"
         )
 
     @override_settings(MIDDLEWARE=[])
@@ -103,7 +103,7 @@ class AlivenessURLTestCase(TestCase):
             cm.output,
         )
 
-    @override_settings(MIDDLEWARE=[COMMON_MIDDLWARE, AliveCheck.import_name])
+    @override_settings(MIDDLEWARE=[COMMON_MIDDLWARE, AliveCheck.get_import_name()])
     def test_wrong_order(self):
         with self.assertLogs(logger="lb_health_check.middleware", level="DEBUG") as cm:
             # This will trigger middleware instantiation and such
