@@ -24,11 +24,12 @@ homepage = "https://github.com/Hovercross/django-lb-health-check"
 repository = "https://github.com/Hovercross/django-lb-health-check"
 keywords = ["django", "health", "alive", "check"]
 [tool.poetry.dependencies]
-python = ">=3.6"
+python = ">=3.6.2"
 Django = ">=2.2"
 
 [tool.poetry.dev-dependencies]
 coverage = "^6.1.2"
+black = "^21.11b1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
