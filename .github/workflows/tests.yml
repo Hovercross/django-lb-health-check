@@ -34,5 +34,7 @@ jobs:
       
       - name: Set up dependencies
         run: python -m poetry install
-      - run: pip install Django=="${{ matrix.django-version }}"
-      - run: python example/manage.py test
+      - name: Re-install specific Django version
+        run: pip install Django=="${{ matrix.django-version }}"
+      - name: Run tests
+        run: python example/manage.py test
