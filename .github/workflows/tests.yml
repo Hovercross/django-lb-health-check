@@ -36,4 +36,3 @@ jobs:
         run: python -m poetry install
       - run: pip install Django=="${{ matrix.django-version }}"
       - run: python example/manage.py test
-
