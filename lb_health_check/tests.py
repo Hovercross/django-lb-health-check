@@ -8,6 +8,7 @@ class AlivenessURLTestCase(TestCase):
         response = self.client.get("/health-check/")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['content-type'], 'text/plain')
+        self.assertEqual(response.content.decode("utf-8"), "200 OK\n")
         
     @override_settings(ALIVENESS_URL={"/health-check/"})
     def test_set(self):
