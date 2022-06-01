@@ -113,7 +113,7 @@ class AlivenessURLTestCase(TestCase):
             "WARNING:lb_health_check.middleware:django.middleware.common.CommonMiddleware is before lb_health_check.middleware.AliveCheck in middleware. Aliveness check may not work properly",
             cm.output,
         )
-    
+
     @override_settings(MIDDLEWARE=[SECURITY_MIDDLEWARE, AliveCheck.get_import_name()])
     def test_wrong_order_security(self):
         with self.assertLogs(logger="lb_health_check.middleware", level="DEBUG") as cm:
