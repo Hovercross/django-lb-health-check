@@ -49,4 +49,4 @@ curl localhost:8000/health-check/
 OK
 ```
 
-Note that the example app has *lb_health_check* in INSTALLED_APPS. This is only nessecary for testing purposes - the app does not use any Django models, admin, views, URL routing, or the like that would require it to be listed in INSTALLED_APPS.
+Note that the example app has *lb_health_check* in INSTALLED_APPS. This is only necessary for testing purposes - the app does not use any Django models, admin, views, URL routing, or the like that would require it to be listed in INSTALLED_APPS.
