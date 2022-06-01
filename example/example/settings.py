@@ -34,11 +34,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-
-    # AliveCheck needs to be as high as possible below SecurityMiddlware
-    # and absolutely above CommonMiddleware.
+    # AliveCheck generally needs to be the top middleware
     'lb_health_check.middleware.AliveCheck',
+    'django.middleware.security.SecurityMiddleware',
 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

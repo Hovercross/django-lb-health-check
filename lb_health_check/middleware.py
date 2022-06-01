@@ -8,10 +8,11 @@ from django.http import HttpResponse
 
 log = logging.getLogger(__name__)
 
-COMMON_MIDDLWARE = "django.middleware.common.CommonMiddleware"
+COMMON_MIDDLEWARE = "django.middleware.common.CommonMiddleware"
+SECURITY_MIDDLEWARE = "django.middleware.security.SecurityMiddleware"
 
 # Middleware that the AliveCheck must come before
-MUST_ABOVE = [COMMON_MIDDLWARE]
+MUST_ABOVE = [COMMON_MIDDLEWARE, SECURITY_MIDDLEWARE]
 
 
 class AliveCheck:
@@ -21,7 +22,7 @@ class AliveCheck:
     def __init__(self, get_response):
         self.get_response = get_response
 
-        # I onlt want to warn and not disable because it's possible to do some trickery
+        # I only want to warn and not disable because it's possible to do some trickery
         # in the ALLOWED_HOSTS or common middleware to still respond properly
         _check_middleware_position()
 
@@ -107,7 +108,7 @@ def _check_middleware_position():
 
         if pos < my_position:
             log.warning(
-                "%s is before %s in middlware. "
+                "%s is before %s in middleware. "
                 "Aliveness check may not work properly",
                 name,
                 AliveCheck.get_import_name(),
