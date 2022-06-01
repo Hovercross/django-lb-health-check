@@ -10,7 +10,7 @@ This package is not an alternative to something like [django-health-check](https
 
 ## How it works
 
-This package works by returning an HTTP response from a middleware class before Django's common middleware performs the host check. The Django URL routing system is also bypassed since that happens "below" all middleware. During request processing, *django-lb-health-check* checks if the request is a *GET* request and matches `settings.ALIVENESS_URL`. If it is, a static plain text "200 OK" response is returned bypassing any other processing.
+This package works by returning an HTTP response from a middleware class before Django's common middleware performs the host check and before the security middleware does HTTPS checks. The Django URL routing system is also bypassed since that happens "below" all middleware. During request processing, *django-lb-health-check* checks if the request is a *GET* request and matches `settings.ALIVENESS_URL`. If it is, a static plain text "200 OK" response is returned bypassing any other processing.
 
 
 ## Usage
@@ -21,12 +21,12 @@ Install *django-lb-health-check*
 pip install django-lb-health-check
 ```
 
-Add *lb_health_check* to your middleware. It **must** be above *django.middleware.common.CommonMiddleware* and should be below *django.middleware.security.SecurityMiddleware*, as high in the stack as possible to prevent any queries or unneeded code from running during a health check.
+Add *lb_health_check* to your middleware at the top position. It **must** be above *django.middleware.common.CommonMiddleware* and in most cases should be above *django.middleware.security.SecurityMiddleware*. Security middleware does things like check for HTTPS, which is often missing in health checks from load balancers. Common middleware does the checks against ALLOWED_HOSTS.
 
 ```python
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
     'lb_health_check.middleware.AliveCheck', #  <- New middleware here
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -49,4 +49,4 @@ curl localhost:8000/health-check/
 OK
 ```
 
-Note that the example app has *lb_health_check* in INSTALLED_APPS. This is only nessecary for testing purposes - the app does not use any Django models, admin, views, URL routing, or the like that would require it to be listed in INSTALLED_APPS.
+Note that the example app has *lb_health_check* in INSTALLED_APPS. This is only necessary for testing purposes - the app does not use any Django models, admin, views, URL routing, or the like that would require it to be listed in INSTALLED_APPS.
