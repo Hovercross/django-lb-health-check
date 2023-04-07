@@ -56,6 +56,15 @@ jobs:
             python: "3.10"
           - django: "4.1.*"
             python: "3.11"
+          # Django 4.2
+          - django: "4.2.*"
+            python: "3.8"
+          - django: "4.2.*"
+            python: "3.9"
+          - django: "4.2.*"
+            python: "3.10"
+          - django: "4.2.*"
+            python: "3.11"
     steps:
       - uses: actions/checkout@v2
       - name: Setup Python version ${{ matrix.versions.python }}
