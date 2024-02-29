@@ -103,7 +103,7 @@ def _check_middleware_position():
             pos = middleware.index(name)
         except ValueError:
             # If this middleware isn't in the list, it's OK
-            log.debug("Common middleware not in middleware")
+            log.debug("%s not in middleware", name)
             continue
 
         if pos < my_position:
