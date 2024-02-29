@@ -53,24 +53,6 @@ Note that the example app has *lb_health_check* in INSTALLED_APPS. This is only 
 
 ## Tested versions
 
-### Django 2.2
-
-- Python 3.7
-- Python 3.8
-- Python 3.9
-
-### Django 3.0
-
-- Python 3.7
-- Python 3.8
-- Python 3.9
-
-### Django 3.1
-
-- Python 3.7
-- Python 3.8
-- Python 3.9
-
 ### Django 3.2
 
 - Python 3.7
@@ -90,3 +72,16 @@ Note that the example app has *lb_health_check* in INSTALLED_APPS. This is only 
 - Python 3.9
 - Python 3.10
 - Python 3.11
+
+### Django 4.2
+
+- Python 3.8
+- Python 3.9
+- Python 3.10
+- Python 3.11
+
+### Django 5.0
+
+- Python 3.10
+- Python 3.11
+- Python 3.12
